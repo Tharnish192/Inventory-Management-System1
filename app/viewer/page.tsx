@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { Package, Search } from "lucide-react";
+import { API_URL } from "@/app/lib/api";
 import Link from "next/link";
 
 export default function ViewerDashboard() {
@@ -9,7 +10,7 @@ export default function ViewerDashboard() {
   const [search, setSearch] = useState("");
 
   useEffect(() => {
-    fetch("http://localhost:5000/products")
+    fetch(`${API_URL}/products`)
       .then(r => r.json())
       .then(data => setProducts(data))
       .catch(console.error);

@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Lock, User, ArrowRight, UserPlus, ShieldCheck } from "lucide-react";
 import Link from "next/link";
+import { API_URL } from "@/app/lib/api";
 
 export default function SignUpPage() {
   const [form, setForm] = useState({ name: "", username: "", password: "", confirmPassword: "", role: "viewer" });
@@ -26,7 +27,7 @@ export default function SignUpPage() {
     setLoading(true);
     try {
       // Check if username already exists
-      const res = await fetch("http://localhost:5000/users");
+      const res = await fetch(`${API_URL}/users`);
       const users = await res.json();
       const exists = users.find((u: any) => u.username === form.username);
       if (exists) {
@@ -42,7 +43,7 @@ export default function SignUpPage() {
       const nextId = String(maxId + 1);
 
       // Create user
-      await fetch("http://localhost:5000/users", {
+      await fetch(`${API_URL}/users`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

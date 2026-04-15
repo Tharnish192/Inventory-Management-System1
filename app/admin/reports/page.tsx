@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { Package } from "lucide-react";
+import { API_URL } from "@/app/lib/api";
 import Link from "next/link";
 
 export default function ReportsPage() {
@@ -10,8 +11,8 @@ export default function ReportsPage() {
 
   useEffect(() => {
     Promise.all([
-      fetch("http://localhost:5000/orders").then(r => r.json()),
-      fetch("http://localhost:5000/products").then(r => r.json()),
+      fetch(`${API_URL}/orders`).then(r => r.json()),
+      fetch(`${API_URL}/products`).then(r => r.json()),
     ]).then(([o, p]) => {
       setOrders(o);
       setProducts(p);

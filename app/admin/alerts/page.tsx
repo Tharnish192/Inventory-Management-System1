@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { X, Truck, Package, PackageX } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { API_URL } from "@/app/lib/api";
 
 export default function AlertsPage() {
   const router = useRouter();
@@ -16,8 +17,8 @@ export default function AlertsPage() {
   const fetchAlertData = async () => {
     try {
       const [prodRes, purchRes] = await Promise.all([
-        fetch("http://localhost:5000/products"),
-        fetch("http://localhost:5000/purchases")
+        fetch(`${API_URL}/products`),
+        fetch(`${API_URL}/purchases`)
       ]);
       const products = await prodRes.json();
       const purchases = await purchRes.json();

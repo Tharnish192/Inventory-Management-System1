@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { Receipt } from "lucide-react";
+import { API_URL } from "@/app/lib/api";
 
 export default function SalesPage() {
   const [orders, setOrders] = useState<any[]>([]);
@@ -9,8 +10,8 @@ export default function SalesPage() {
 
   useEffect(() => {
     Promise.all([
-      fetch("http://localhost:5000/orders").then(r => r.json()),
-      fetch("http://localhost:5000/products").then(r => r.json())
+      fetch(`${API_URL}/orders`).then(r => r.json()),
+      fetch(`${API_URL}/products`).then(r => r.json())
     ])
     .then(([ordersData, productsData]) => {
       setOrders(ordersData);

@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { API_URL } from "@/app/lib/api";
 
 const EMPTY_USER = { name: "", username: "", role: "viewer", password: "123" };
 
@@ -13,7 +14,7 @@ export default function UserManagementPage() {
   useEffect(() => { fetchUsers(); }, []);
 
   const fetchUsers = () => {
-    fetch("http://localhost:5000/users")
+    fetch(`${API_URL}/users`)
       .then(r => r.json())
       .then(data => setUsers(data))
       .catch(console.error);
@@ -35,7 +36,7 @@ export default function UserManagementPage() {
     e.preventDefault();
     try {
       if (editingUser) {
-        await fetch(`http://localhost:5000/users/${editingUser.id}`, {
+        await fetch(`${API_URL}/users/${editingUser.id}`, {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ ...editingUser, ...form }),
@@ -46,7 +47,7 @@ export default function UserManagementPage() {
           const n = parseInt(u.id);
           return isNaN(n) ? max : Math.max(max, n);
         }, 0);
-        await fetch("http://localhost:5000/users", {
+        await fetch(`${API_URL}/users`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ ...form, id: String(maxId + 1) }),
@@ -60,7 +61,7 @@ export default function UserManagementPage() {
   const handleDelete = async (id: string) => {
     if (!confirm("Are you sure you want to delete this user?")) return;
     try {
-      await fetch(`http://localhost:5000/users/${id}`, { method: "DELETE" });
+      await fetch(`${API_URL}/users/${id}`, { method: "DELETE" });
       fetchUsers();
     } catch (err) { console.error(err); }
   };

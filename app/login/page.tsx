@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Lock, User, ArrowRight, Eye, ShieldCheck, PenTool, EyeIcon } from "lucide-react";
 import Link from "next/link";
+import { API_URL } from "@/app/lib/api";
 
 export default function LoginPage() {
   const [roleMode, setRoleMode] = useState<"admin" | "staff" | "viewer">("admin");
@@ -20,7 +21,7 @@ export default function LoginPage() {
     setLoading(true);
 
     try {
-      const res = await fetch("http://localhost:5000/users");
+      const res = await fetch(`${API_URL}/users`);
       const users = await res.json();
       
       const user = users.find(

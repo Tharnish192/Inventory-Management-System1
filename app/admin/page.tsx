@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { Package, AlertCircle } from "lucide-react";
+import { API_URL } from "@/app/lib/api";
 
 export default function AdminDashboard() {
   const [stats, setStats] = useState({ products: 0, alerts: 0, users: 0 });
@@ -9,9 +10,9 @@ export default function AdminDashboard() {
   useEffect(() => {
     // In a real app we'd fetch this in parallel
     Promise.all([
-      fetch("http://localhost:5000/products").then(r => r.json()),
-      fetch("http://localhost:5000/alerts").then(r => r.json()),
-      fetch("http://localhost:5000/users").then(r => r.json()),
+      fetch(`${API_URL}/products`).then(r => r.json()),
+      fetch(`${API_URL}/alerts`).then(r => r.json()),
+      fetch(`${API_URL}/users`).then(r => r.json()),
     ]).then(([products, alerts, users]) => {
       setStats({
         products: products.length,

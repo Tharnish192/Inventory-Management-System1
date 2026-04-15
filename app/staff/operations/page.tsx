@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { ShoppingBag, PackagePlus, FileText, ArrowRight } from "lucide-react";
+import { API_URL } from "@/app/lib/api";
 
 export default function StaffOperationsPage() {
   const [activeTab, setActiveTab] = useState("sale");
@@ -25,7 +26,7 @@ export default function StaffOperationsPage() {
 
   const fetchProducts = async () => {
     try {
-      const res = await fetch("http://localhost:5000/products");
+      const res = await fetch(`${API_URL}/products`);
       const data = await res.json();
       setProducts(data);
     } catch (e) {
@@ -51,7 +52,7 @@ export default function StaffOperationsPage() {
     try {
       // Step 1: Update product stock
       const updatedQuantity = product.quantity - saleQuantity;
-      await fetch(`http://localhost:5000/products/${saleProductId}`, {
+      await fetch(`${API_URL}/products/${saleProductId}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ quantity: updatedQuantity }),
@@ -66,7 +67,7 @@ export default function StaffOperationsPage() {
         orderStatus: "COMPLETED",
         date: new Date().toISOString(),
       };
-      await fetch("http://localhost:5000/orders", {
+      await fetch(`${API_URL}/orders`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(newOrder),
@@ -91,7 +92,7 @@ export default function StaffOperationsPage() {
     setLoading(true);
     try {
       const updatedQuantity = product.quantity + entryQuantity;
-      await fetch(`http://localhost:5000/products/${entryProductId}`, {
+      await fetch(`${API_URL}/products/${entryProductId}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ quantity: updatedQuantity }),
@@ -124,7 +125,7 @@ export default function StaffOperationsPage() {
         date: new Date().toISOString(),
       };
 
-      await fetch("http://localhost:5000/purchases", {
+      await fetch(`${API_URL}/purchases`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(newPurchase),

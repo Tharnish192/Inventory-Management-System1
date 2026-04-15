@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { API_URL } from "@/app/lib/api";
 
 const EMPTY_PRODUCT = { name: "", category: "", price: 0, quantity: 1, expiryDate: "", supplier: "", sku: "" };
 
@@ -13,7 +14,7 @@ export default function InventoryManagementPage() {
   useEffect(() => { fetchProducts(); }, []);
 
   const fetchProducts = () => {
-    fetch("http://localhost:5000/products")
+    fetch(`${API_URL}/products`)
       .then(r => r.json())
       .then(data => setProducts(data))
       .catch(console.error);
@@ -36,7 +37,7 @@ export default function InventoryManagementPage() {
     try {
       if (editingProduct) {
         // UPDATE existing
-        await fetch(`http://localhost:5000/products/${editingProduct.id}`, {
+        await fetch(`${API_URL}/products/${editingProduct.id}`, {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ ...editingProduct, ...form }),
@@ -47,7 +48,7 @@ export default function InventoryManagementPage() {
           const n = parseInt(p.id);
           return isNaN(n) ? max : Math.max(max, n);
         }, 0);
-        await fetch("http://localhost:5000/products", {
+        await fetch(`${API_URL}/products`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ ...form, id: String(maxId + 1), sku: form.sku || "SKU-" + String(maxId + 1) }),
@@ -61,7 +62,7 @@ export default function InventoryManagementPage() {
   const handleDelete = async (id: string) => {
     if (!confirm("Delete this product permanently?")) return;
     try {
-      await fetch(`http://localhost:5000/products/${id}`, { method: "DELETE" });
+      await fetch(`${API_URL}/products/${id}`, { method: "DELETE" });
       fetchProducts();
     } catch (err) { console.error(err); }
   };
