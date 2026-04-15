@@ -1,0 +1,101 @@
+{
+  "users": [
+    {
+      "id": "1",
+      "name": "System Admin",
+      "username": "admin",
+      "password": "123",
+      "role": "admin"
+    },
+    {
+      "id": "2",
+      "name": "Store Staff",
+      "username": "staff",
+      "password": "123",
+      "role": "staff"
+    },
+    {
+      "id": "3",
+      "name": "Guest Viewer",
+      "username": "viewer",
+      "password": "123",
+      "role": "viewer"
+    },
+    {
+      "id": "4",
+      "name": "gopi",
+      "username": "gopi",
+      "password": "123",
+      "role": "admin"
+    }
+  ],
+  "products": [
+    {
+      "id": "1",
+      "name": "Laptop",
+      "sku": "LP-001",
+      "category": "Electronics",
+      "quantity": 19,
+      "price": 999.99,
+      "supplier": "TechCorp",
+      "expiryDate": "2028-12-31"
+    },
+    {
+      "id": "2",
+      "name": "Office Chair",
+      "sku": "OC-002",
+      "category": "Furniture",
+      "quantity": 44,
+      "price": 149.5,
+      "supplier": "FurniCo",
+      "expiryDate": "N/A"
+    },
+    {
+      "id": "3",
+      "name": "Printer Ink",
+      "sku": "PI-003",
+      "category": "Stationery",
+      "quantity": 5,
+      "price": 25,
+      "supplier": "OfficeMax",
+      "expiryDate": "2025-06-15"
+    }
+  ],
+  "orders": [
+    {
+      "id": "J7s4Ej8QZpw",
+      "productId": "1",
+      "quantity": 1,
+      "totalPrice": 999.99,
+      "orderStatus": "COMPLETED",
+      "date": "2026-04-15T04:55:34.367Z"
+    },
+    {
+      "id": "_iNqPsbdnQY",
+      "productId": "2",
+      "quantity": 1,
+      "totalPrice": 149.5,
+      "orderStatus": "COMPLETED",
+      "date": "2026-04-15T05:37:47.807Z"
+    }
+  ],
+  "alerts": [
+    {
+      "id": "1",
+      "type": "low_stock",
+      "message": "Printer Ink is low on stock (5 remaining).",
+      "status": "unread"
+    }
+  ],
+  "purchases": [
+    {
+      "id": "Tz4go7e7Oa4",
+      "supplier": "ram",
+      "productId": "2",
+      "quantity": 1,
+      "status": "PENDING",
+      "date": "2026-04-15T05:36:50.793Z"
+    }
+  ],
+  "$schema": "./node_modules/json-server/schema.json"
+}
