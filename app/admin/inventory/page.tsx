@@ -10,8 +10,22 @@ export default function InventoryManagementPage() {
   const [showModal, setShowModal] = useState(false);
   const [editingProduct, setEditingProduct] = useState<any>(null);
   const [form, setForm] = useState(EMPTY_PRODUCT);
+  const [userRole, setUserRole] = useState<string>("viewer");
 
-  useEffect(() => { fetchProducts(); }, []);
+  useEffect(() => { 
+    fetchProducts(); 
+    const storedUser = localStorage.getItem("inventory_user");
+    if (storedUser) {
+      try {
+        const user = JSON.parse(storedUser);
+        setUserRole(user.role || "viewer");
+      } catch (e) {
+        console.error("Failed to parse user role", e);
+      }
+    }
+  }, []);
+
+  const isReadOnly = userRole === "viewer";
 
   const fetchProducts = () => {
     fetch(`${API_URL}/products`)
@@ -21,12 +35,14 @@ export default function InventoryManagementPage() {
   };
 
   const openAdd = () => {
+    if (isReadOnly) return;
     setEditingProduct(null);
     setForm(EMPTY_PRODUCT);
     setShowModal(true);
   };
 
   const openEdit = (p: any) => {
+    if (isReadOnly) return;
     setEditingProduct(p);
     setForm({ name: p.name, category: p.category || "", price: p.price, quantity: p.quantity, expiryDate: p.expiryDate || "", supplier: p.supplier || "", sku: p.sku || "" });
     setShowModal(true);
@@ -34,6 +50,7 @@ export default function InventoryManagementPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (isReadOnly) return;
     try {
       if (editingProduct) {
         // UPDATE existing
@@ -60,6 +77,7 @@ export default function InventoryManagementPage() {
   };
 
   const handleDelete = async (id: string) => {
+    if (isReadOnly) return;
     if (!confirm("Delete this product permanently?")) return;
     try {
       await fetch(`${API_URL}/products/${id}`, { method: "DELETE" });
@@ -72,11 +90,15 @@ export default function InventoryManagementPage() {
       <div className="flex justify-between items-end">
         <div>
           <h1 className="text-4xl font-black text-[#1e1b4b] uppercase tracking-tight">Inventory Management</h1>
-          <p className="text-slate-500 mt-2 text-lg">View and manage your stock levels.</p>
+          <p className="text-slate-500 mt-2 text-lg">
+            {isReadOnly ? "View real-time stock levels." : "View and manage your stock levels."}
+          </p>
         </div>
-        <button onClick={openAdd} className="bg-[#5a4bfa] hover:bg-[#4b3de6] text-white px-6 py-3 rounded-xl font-bold transition-colors shadow-md flex items-center space-x-2">
-          <span>+</span><span>Add Product</span>
-        </button>
+        {!isReadOnly && (
+          <button onClick={openAdd} className="bg-[#5a4bfa] hover:bg-[#4b3de6] text-white px-6 py-3 rounded-xl font-bold transition-colors shadow-md flex items-center space-x-2">
+            <span>+</span><span>Add Product</span>
+          </button>
+        )}
       </div>
 
       <div className="bg-white rounded-[32px] p-8 shadow-sm border border-slate-100 overflow-hidden">
@@ -91,7 +113,7 @@ export default function InventoryManagementPage() {
                 <th className="py-4 px-4">Quantity</th>
                 <th className="py-4 px-4">Expiry</th>
                 <th className="py-4 px-4">Status</th>
-                <th className="py-4 px-4 text-right">Actions</th>
+                {!isReadOnly && <th className="py-4 px-4 text-right">Actions</th>}
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100/50">
@@ -111,14 +133,16 @@ export default function InventoryManagementPage() {
                         {isOut ? "OUT OF STOCK" : isLow ? "LOW STOCK" : "IN STOCK"}
                       </span>
                     </td>
-                    <td className="py-5 px-4 text-right space-x-2">
-                      <button onClick={() => openEdit(p)} className="px-4 py-1.5 rounded-lg text-xs font-bold bg-white border border-slate-200 text-slate-600 hover:bg-slate-50 shadow-sm transition-colors uppercase tracking-widest">
-                        Edit
-                      </button>
-                      <button onClick={() => handleDelete(p.id)} className="px-4 py-1.5 rounded-lg text-xs font-bold bg-[#ef4444] text-white hover:bg-red-600 shadow-sm transition-colors uppercase tracking-widest">
-                        Delete
-                      </button>
-                    </td>
+                    {!isReadOnly && (
+                      <td className="py-5 px-4 text-right space-x-2">
+                        <button onClick={() => openEdit(p)} className="px-4 py-1.5 rounded-lg text-xs font-bold bg-white border border-slate-200 text-slate-600 hover:bg-slate-50 shadow-sm transition-colors uppercase tracking-widest">
+                          Edit
+                        </button>
+                        <button onClick={() => handleDelete(p.id)} className="px-4 py-1.5 rounded-lg text-xs font-bold bg-[#ef4444] text-white hover:bg-red-600 shadow-sm transition-colors uppercase tracking-widest">
+                          Delete
+                        </button>
+                      </td>
+                    )}
                   </tr>
                 );
               })}

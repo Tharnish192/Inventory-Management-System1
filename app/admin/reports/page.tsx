@@ -8,8 +8,17 @@ import Link from "next/link";
 export default function ReportsPage() {
   const [orders, setOrders] = useState<any[]>([]);
   const [products, setProducts] = useState<any[]>([]);
+  const [role, setRole] = useState("admin");
 
   useEffect(() => {
+    const storedUser = localStorage.getItem("inventory_user");
+    if (storedUser) {
+      try {
+        const user = JSON.parse(storedUser);
+        setRole(user.role || "admin");
+      } catch (e) {}
+    }
+
     Promise.all([
       fetch(`${API_URL}/orders`).then(r => r.json()),
       fetch(`${API_URL}/products`).then(r => r.json()),
@@ -98,9 +107,11 @@ export default function ReportsPage() {
       <div className="bg-white rounded-[32px] p-8 shadow-sm border border-slate-100">
         <div className="flex justify-between items-center mb-6">
           <h3 className="text-2xl font-black text-[#1e1b4b] uppercase">Recent Activity</h3>
-          <Link href="/admin/sales" className="text-xs font-black text-[#5a4bfa] uppercase tracking-widest hover:underline">
-            View All
-          </Link>
+          {(role === "admin" || role === "staff") && (
+            <Link href={`/${role}/sales`} className="text-xs font-black text-[#5a4bfa] uppercase tracking-widest hover:underline">
+              View All
+            </Link>
+          )}
         </div>
         {orders.length === 0 ? (
           <div className="h-32 flex items-center justify-center text-slate-400">

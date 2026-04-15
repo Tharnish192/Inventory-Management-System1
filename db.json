@@ -20,13 +20,6 @@
       "username": "viewer",
       "password": "123",
       "role": "viewer"
-    },
-    {
-      "id": "4",
-      "name": "gopi",
-      "username": "gopi",
-      "password": "123",
-      "role": "admin"
     }
   ],
   "products": [
@@ -35,7 +28,7 @@
       "name": "Laptop",
       "sku": "LP-001",
       "category": "Electronics",
-      "quantity": 19,
+      "quantity": 20,
       "price": 999.99,
       "supplier": "TechCorp",
       "expiryDate": "2028-12-31"
