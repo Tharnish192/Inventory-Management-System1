@@ -4,11 +4,18 @@ import path from 'path';
 
 const DB_PATH = path.join(process.cwd(), 'db.json');
 
+// Memory cache to survive between function calls on Vercel (while warm)
+let memoryDb: any = null;
+
 // Helper to read the JSON file
 function getDbData() {
+  // If we have data in memory, use it (handles persistence during warm Lambda)
+  if (memoryDb) return memoryDb;
+
   try {
     const fileData = fs.readFileSync(DB_PATH, 'utf8');
-    return JSON.parse(fileData);
+    memoryDb = JSON.parse(fileData);
+    return memoryDb;
   } catch (error) {
     console.error('Read error:', error);
     return {};
@@ -17,10 +24,13 @@ function getDbData() {
 
 // Helper to write to the JSON file
 function saveDbData(data: any) {
+  memoryDb = data; // Always update memory cache
   try {
+    // Try to write to disk (will work locally, might fail on Vercel)
     fs.writeFileSync(DB_PATH, JSON.stringify(data, null, 2), 'utf8');
   } catch (error) {
-    console.error('Write error:', error);
+    // Fail silently on Vercel read-only FS
+    console.warn('Persistence to disk failed (expected behavior on Vercel). Using in-memory store.');
   }
 }
 
@@ -62,7 +72,6 @@ export async function POST(
     const data = getDbData();
     
     if (!data[resource]) {
-      // If resource doesn't exist, create it as an array if possible
       data[resource] = [];
     }
 
@@ -100,7 +109,7 @@ export async function PUT(
       return NextResponse.json({ error: 'Item not found' }, { status: 404 });
     }
 
-    data[resource][index] = { ...body, id }; // Ensure ID stays same
+    data[resource][index] = { ...body, id }; 
     saveDbData(data);
 
     return NextResponse.json(data[resource][index]);
@@ -129,7 +138,6 @@ export async function PATCH(
       return NextResponse.json({ error: 'Item not found' }, { status: 404 });
     }
 
-    // Merge only the provided fields
     data[resource][index] = { ...data[resource][index], ...body, id };
     saveDbData(data);
 
