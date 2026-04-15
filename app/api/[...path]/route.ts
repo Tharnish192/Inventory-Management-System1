@@ -1,4 +1,4 @@
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import fs from 'fs';
 import path from 'path';
 
@@ -9,11 +9,14 @@ function getDbData() {
   return JSON.parse(fileData);
 }
 
-// GET handler (for reading users, products, etc.)
-export async function GET(request: Request, context: { params: Promise<{ path: string[] }> }) {
+// GET handler
+export async function GET(
+  request: NextRequest,
+  { params }: { params: Promise<{ path: string[] }> }
+) {
   try {
-    const params = await context.params;
-    const key = params.path[0];
+    const resolvedParams = await params;
+    const key = resolvedParams.path[0];
     const data = getDbData();
     
     if (data[key]) {
@@ -21,15 +24,18 @@ export async function GET(request: Request, context: { params: Promise<{ path: s
     }
     return NextResponse.json({ error: 'Resource not found' }, { status: 404 });
   } catch (error) {
-    return NextResponse.json({ error: 'Failed to read database' }, { status: 500 });
+    return NextResponse.json({ error: 'Failed' }, { status: 500 });
   }
 }
 
-// POST handler (for adding items)
-export async function POST(request: Request, context: { params: Promise<{ path: string[] }> }) {
+// POST handler
+export async function POST(
+  request: NextRequest,
+  { params }: { params: Promise<{ path: string[] }> }
+) {
   try {
-    const params = await context.params;
-    const key = params.path[0];
+    const resolvedParams = await params;
+    const key = resolvedParams.path[0];
     const body = await request.json();
     const data = getDbData();
     
@@ -40,9 +46,8 @@ export async function POST(request: Request, context: { params: Promise<{ path: 
       };
       return NextResponse.json(newItem);
     }
-    return NextResponse.json({ error: 'Resource not found' }, { status: 404 });
+    return NextResponse.json({ error: 'Not found' }, { status: 404 });
   } catch (error) {
-    return NextResponse.json({ error: 'Failed to write to database' }, { status: 500 });
+    return NextResponse.json({ error: 'Failed' }, { status: 500 });
   }
 }
-
