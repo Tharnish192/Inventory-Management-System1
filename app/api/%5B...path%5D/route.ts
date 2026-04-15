@@ -10,8 +10,9 @@ function getDbData() {
 }
 
 // GET handler (for reading users, products, etc.)
-export async function GET(request: Request, { params }: { params: { path: string[] } }) {
+export async function GET(request: Request, context: { params: Promise<{ path: string[] }> }) {
   try {
+    const params = await context.params;
     const key = params.path[0];
     const data = getDbData();
     
@@ -25,8 +26,9 @@ export async function GET(request: Request, { params }: { params: { path: string
 }
 
 // POST handler (for adding items)
-export async function POST(request: Request, { params }: { params: { path: string[] } }) {
+export async function POST(request: Request, context: { params: Promise<{ path: string[] }> }) {
   try {
+    const params = await context.params;
     const key = params.path[0];
     const body = await request.json();
     const data = getDbData();
@@ -36,9 +38,6 @@ export async function POST(request: Request, { params }: { params: { path: strin
         id: body.id || Math.random().toString(36).substr(2, 9), 
         ...body 
       };
-      
-      // Note: In serverless, this won't persist to the file forever, 
-      // but it will work for the session.
       return NextResponse.json(newItem);
     }
     return NextResponse.json({ error: 'Resource not found' }, { status: 404 });
@@ -46,3 +45,4 @@ export async function POST(request: Request, { params }: { params: { path: strin
     return NextResponse.json({ error: 'Failed to write to database' }, { status: 500 });
   }
 }
+
