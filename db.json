@@ -52,6 +52,46 @@
       "price": 25,
       "supplier": "OfficeMax",
       "expiryDate": "2025-06-15"
+    },
+    {
+      "id": "4",
+      "name": "Mouse",
+      "category": "Electronics",
+      "price": 19.99,
+      "quantity": 35,
+      "expiryDate": "",
+      "supplier": "",
+      "sku": "SKU-4"
+    },
+    {
+      "id": "5",
+      "name": "Keyboard",
+      "category": "Electronics",
+      "price": 45.99,
+      "quantity": 25,
+      "expiryDate": "",
+      "supplier": "",
+      "sku": "SKU-5"
+    },
+    {
+      "id": "6",
+      "name": "Notebook",
+      "category": "Stationery",
+      "price": 5.5,
+      "quantity": 21,
+      "expiryDate": "",
+      "supplier": "",
+      "sku": "SKU-6"
+    },
+    {
+      "id": "7",
+      "name": "Desk Lamp",
+      "category": "Furniture",
+      "price": 29.99,
+      "quantity": 14,
+      "expiryDate": "",
+      "supplier": "",
+      "sku": "SKU-7"
     }
   ],
   "orders": [
